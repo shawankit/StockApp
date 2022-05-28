@@ -69,7 +69,7 @@ const Consigments = ({ consigments , fetchConsignments}) => {
             </Typography.Text>
         ),
         dataIndex: column.name,
-        key: column.name,
+        key: column.name + (new Date().getTime() + Math.random() * 10000),
         width: '150px',
         filters: uniqueMap[column.name] ? Array.from(uniqueMap[column.name]).map((value) => ({ text: value, value: value})) : [],
         filterMode: 'tree',
@@ -80,7 +80,7 @@ const Consigments = ({ consigments , fetchConsignments}) => {
     if(actionColumn){
         const actionCol = {
             title: 'Action',
-            key: 'operation',
+            key: 'operation'  + (new Date().getTime() + Math.random() * 10000),
             fixed: 'right',
             width: 250,
             render: (data) => {
@@ -124,15 +124,16 @@ const Consigments = ({ consigments , fetchConsignments}) => {
         <Row className="w-full">
             <Col span={24}>
                 <Table
-                    dataSource={consigments} 
+                    dataSource={consigments.map((con,index) => ({ ...con,key: index + (new Date().getTime() + Math.random() * 10000)})) } 
                     columns={columns}
                     bordered
                     scroll={{ x: 1600 }}
-                    pagination={ {current: 1,pageSize: 25}}
+                    pagination={ {pageSize: 10}}
+                    rowKey={(record) => record.id + (new Date().getTime() + Math.random() * 10000)}
                 />
             </Col>
         </Row>
-        <ConsignmentModal visible={visibleCM} setVisible={setVisibleCM} data={editData} fetchConsignments={fetchConsignments}/>
+        <ConsignmentModal visible={visibleCM} setVisible={setVisibleCM} data={editData} fetchConsignments={fetchConsignments} />
         <LocationModal visible={visibleLM} setVisible={setVisibleLM} data={editLData} consigmentData = {editData} fetchConsignments={fetchConsignments}/>
         </>
     )

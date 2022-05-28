@@ -2,11 +2,11 @@ import { DeleteOutlined, EditOutlined, HeatMapOutlined, PlusSquareOutlined } fro
 import { Button, Col, Popconfirm, Row, Table, Typography } from "antd";
 import { useEffect, useState } from "react";
 
-import { deleteConsignment, getAllGodowns } from "../api";
+import { deleteGodown, getAllGodowns } from "../api";
 import GodownData from "../data/GodownData";
 import GodownModal from "./modals/GodownModal";
 const { Title } = Typography;
-const Godowns = ({ }) => {
+const Godowns = ({ refresh }) => {
 
     const [godowns, setGodowns] = useState(null);
     const [visible, setVisible] = useState(false);
@@ -35,7 +35,9 @@ const Godowns = ({ }) => {
     const  onDelete = async (data) => {
         const isConfirm = confirm('Are you sure you want to delete ?')
         if(isConfirm){
-            await deleteConsignment(data.id);
+            await deleteGodown(data.id);
+            fetchGodowns();
+            refresh();
         } 
     }
 
@@ -82,7 +84,8 @@ const Godowns = ({ }) => {
                         dataSource={godowns} 
                         columns={columns}
                         bordered
-                        pagination={ {current: 1,pageSize: 25}}
+                        pagination={ {pageSize: 10}}
+                        rowKey={(record) => record.id + (new Date().getTime() + Math.random() * 10000)}
                     />
                 </Col>
             </Row> 

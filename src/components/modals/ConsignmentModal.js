@@ -139,6 +139,7 @@ const ConsignmentModal = ({ visible , setVisible , data, fetchConsignments}) => 
                                     filterSort={(optionA, optionB) =>
                                         optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
                                     }
+                                    key={field.name}
                                 />
                         )
                     }     
