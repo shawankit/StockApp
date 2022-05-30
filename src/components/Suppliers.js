@@ -1,24 +1,24 @@
-import { DeleteOutlined, EditOutlined, PlusSquareOutlined } from "@ant-design/icons";
-import { Button, Col, Row, Table, Typography } from "antd";
+import { DeleteOutlined, EditOutlined, HeatMapOutlined, PlusSquareOutlined } from "@ant-design/icons";
+import { Button, Col, Popconfirm, Row, Table, Typography } from "antd";
 import { useEffect, useState } from "react";
 
-import { deleteItem, getAllItems } from "../api";
-import ItemData from "../data/ItemData";
-import ItemModal from "./modals/ItemModal";
+import { deleteSupplier, getAllSuppliers } from "../api";
+import SupplierData from "../data/SupplierData";
+import SupplierModal from "./modals/SupplierModal";
 const { Title } = Typography;
-const Items = ({ }) => {
+const Suppliers = ({ refresh }) => {
 
-    const [items, setItems] = useState(null);
+    const [suppliers, setSuppliers] = useState(null);
     const [visible, setVisible] = useState(false);
     const [editData, setEditData] = useState(null);
 
-    const fetchItems = async () => {
-        const response = await getAllItems();
-        setItems(response?.data?.entity);
+    const fetchSuppliers = async () => {
+        const response = await getAllSuppliers();
+        setSuppliers(response?.data?.entity);
     }
 
     useEffect(() => {
-        fetchItems();
+        fetchSuppliers();
     },[]);
 
 
@@ -35,13 +35,13 @@ const Items = ({ }) => {
     const  onDelete = async (data) => {
         const isConfirm = confirm('Are you sure you want to delete ?')
         if(isConfirm){
-            await deleteItem(data.id);
-            fetchItems();
+            await deleteSupplier(data.id);
+            fetchSuppliers();
             refresh();
         } 
     }
 
-    const fieldData = ItemData;
+    const fieldData = SupplierData;
     const columns = fieldData.map((column) => ({
         title:  ( 
             <Typography.Text ellipsis={true} title={column.label}>
@@ -75,23 +75,24 @@ const Items = ({ }) => {
     return (
         <>
             <div className="home-heading-container">
-                <Title level={2} className="home-title">Items</Title>
-                <Title level={3} className="show-more"><Button onClick={() => onAdd()}><PlusSquareOutlined />Add Item</Button></Title>
+                <Title level={2} className="home-title">Suppliers</Title>
+                <Title level={3} className="show-more"><Button onClick={() => onAdd()}><PlusSquareOutlined />Add Suppliers</Button></Title>
             </div>
             <Row className="w-full">
                 <Col span={24}>
                     <Table
-                        dataSource={items}
+                        dataSource={suppliers} 
                         columns={columns}
                         bordered
-                        pagination={ {current: 1,pageSize: 25}}
+                        pagination={ {pageSize: 10}}
+                        rowKey={(record) => record.id + (new Date().getTime() + Math.random() * 10000)}
                     />
                 </Col>
             </Row> 
-            <ItemModal visible={visible} setVisible={setVisible} data={editData} callback={fetchItems}/>       
+            <SupplierModal visible={visible} setVisible={setVisible} data={editData} callback={fetchSuppliers}/>       
         </>
     );
 }
 
-export default Items;
+export default Suppliers;
 

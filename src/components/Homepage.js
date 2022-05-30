@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import { getAllConsigment, getAllStats, getAllConsigmentWithFilter } from '../api/index.js';
 import Consigments from './Consignments.js';
 import Godowns from './Godowns.js';
+import Items from './Items.js';
+import Suppliers from './Suppliers.js';
 import InputField from './common/InputField.js';
 import { SearchOutlined } from '@ant-design/icons';
 
@@ -18,6 +20,7 @@ const Homepage = () => {
       itemCount: 0,
       consignmentCount: 0,
       packageCount: 0,
+      supplierCount: 0,
       godownCount: 0
   });
   useEffect(() => {
@@ -55,6 +58,7 @@ const Homepage = () => {
             <Col span={12}><Statistic title="Total Packages" value={millify(globalStats?.packageCount ? globalStats.packageCount : 0)}/></Col>
             <Col span={12}><Statistic title="Total Items" value={millify(globalStats?.itemCount? globalStats.itemCount : 0)}/></Col>
             <Col span={12}><Statistic title="Total Godowns" value={millify(globalStats?.godownCount ? globalStats.godownCount : 0)}/></Col>
+            <Col span={12}><Statistic title="Total Suppliers" value={millify(globalStats?.supplierCount ? globalStats.supplierCount : 0)}/></Col>
       </Row>
       
       <Row>
@@ -77,6 +81,12 @@ const Homepage = () => {
       
       <div id='godowns'>
         <Godowns refresh={fetchConsignments} />
+      </div>
+      <div id='items'>
+        <Items refresh={fetchConsignments} />
+      </div>
+      <div id='suppliers'>
+        <Suppliers refresh={fetchConsignments} />
       </div>
     </>
   );

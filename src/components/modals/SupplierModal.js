@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Row, Col, Table, Typography } from 'antd';
 import InputField from '../common/InputField';
-import { createItem, updateItem } from '../../api'; 
+import { createSupplier, updateSupplier } from '../../api'; 
 import moment from 'moment';
 import swal from 'sweetalert';
-import ItemData from '../../data/ItemData';
+import SupplierData from '../../data/SupplierData';
 
 
-const ItemModal = ({ visible , setVisible , data , callback}) => {
+const SupplierModal = ({ visible , setVisible , data , callback}) => {
 
-    const initialData = ItemData.reduce((previous, field) => ({...previous,[field.name]: ''}),{});
+    const initialData = SupplierData.reduce((previous, field) => ({...previous,[field.name]: ''}),{});
     const [formData, setFormData] = useState(initialData);
 
     const onChange = (e) => {
@@ -24,20 +24,20 @@ const ItemModal = ({ visible , setVisible , data , callback}) => {
         console.log(formData);
     
         if(data) {
-            let response = await updateItem(data.id,formData);
+            let response = await updateSupplier(data.id,formData);
             console.log(response);
             if(response?.data?.status == true){
-                swal("Succesfully updated item details", "success");
+                swal("Succesfully updated supplier details", "success");
             }
             else{
                 swal("OOPS Something Went wrong", "error");
             }
         }
         else{
-            let response = await createItem(formData);
+            let response = await createSupplier(formData);
             console.log(response);
             if(response?.data?.status == true){
-                swal("Succesfully added item details", "success");
+                swal("Succesfully added supplier details", "success");
             }
             else{
                 swal("OOPS Something Went wrong", "error");
@@ -53,7 +53,7 @@ const ItemModal = ({ visible , setVisible , data , callback}) => {
     return (
         <>
         <Modal
-            title={`${data ? 'Edit' : 'Add'} Item`}
+            title={`${data ? 'Edit' : 'Add'} Supplier`}
             visible={visible}
             width={"50%"}
             style={{ top: 75 }}
@@ -73,7 +73,7 @@ const ItemModal = ({ visible , setVisible , data , callback}) => {
             <div>
                 <Row>
                     { 
-                        ItemData.map((field) =>
+                        SupplierData.map((field) =>
                             <InputField 
                                 label={field.label}
                                 type={field.inputType} 
@@ -94,4 +94,4 @@ const ItemModal = ({ visible , setVisible , data , callback}) => {
     );
 };
 
-export default ItemModal;
+export default SupplierModal;

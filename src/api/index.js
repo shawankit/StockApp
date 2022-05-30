@@ -19,8 +19,13 @@ export const deleteGodown = (id) => API.delete(`/godowns/${id}`);
 export const getAllItems = () => API.get("/items");
 export const createItem = (item) => API.post("/items", item);
 export const updateItem = (id,item) => API.put(`/items/${id}`, item);
+export const deleteItem = (id) => API.delete(`/items/${id}`);
 
 export const getAllSuppliers = () => API.get("/suppliers");
+export const createSupplier = (supplier) => API.post("/suppliers", supplier);
+export const updateSupplier = (id,supplier) => API.put(`/suppliers/${id}`, supplier);
+export const deleteSupplier = (id) => API.delete(`/suppliers/${id}`);
+
 export const getAllTransporters = () => API.get("/transporters");
 export const getAllStats = () => API.get("/stats");
 

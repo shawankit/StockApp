@@ -1,16 +1,10 @@
 const ItemData = [
     {
-        label : "Godown Name",
+        label : "Item Name",
         name: 'name',
-        type: 'input',
-        inputType: 'text'
-    },
-    {
-        label : "Address",
-        name: 'address',
         type: 'input',
         inputType: 'text'
     }
 ];
 
-export default GodownData;
+export default ItemData;
