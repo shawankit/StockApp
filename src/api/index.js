@@ -30,3 +30,7 @@ export const getAllTransporters = () => API.get("/transporters");
 export const getAllStats = () => API.get("/stats");
 
 export const getAllConsigmentWithFilter = (filter) => API.get(`/consigments?consignmentNo=${filter}`);
+
+export const createChallan = (godownId,consignments,number) => API.post("/challans", { godownId, consignments, number });
+
+
