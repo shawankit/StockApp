@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const url = `http://${window.location.hostname}:8000`;
+//const url = `http://ec2-3-111-57-30.ap-south-1.compute.amazonaws.com:8000`;
 const API = axios.create({ baseURL : url});
 
 export const getAllConsigment = (filter) => API.get(`/consigments?${filter ? `consignmentNo=${filter}` : ""}`);

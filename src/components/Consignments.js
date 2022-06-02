@@ -109,12 +109,12 @@ const Consigments = ({ consigments , fetchConsignments}) => {
     
         columns.push(actionCol);
     }
-   
+    const searchValue = document.getElementById('searchByConNo')?.value;
 
     return (
         <>
          <div className="home-heading-container">
-            <Title level={2} className="home-title">Consignments</Title>
+            <Title level={2} className="home-title">Consignments<div>{searchValue != '' ? ` (Search results - "${searchValue}")` : ''}</div></Title>
            
             <Title level={3} className="show-more">
                 <a className="text-sm mr-4" onClick={() => SetActionCol(!actionColumn)}>Action</a>

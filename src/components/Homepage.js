@@ -63,11 +63,13 @@ const Homepage = () => {
       
       <Row>
         <InputField
-              label={'Search By Consignment No'}
+              label={'Search'}
+              placeholder={'consignment no, transporter, supplier, item, bill no, mr no,godown'}
               type="text"
               name="searchByConNo"
               id="searchByConNo"
               onKeyPress={handleKeyPress}
+              icol={10}
           />
           <Col span={4}>
                 <Button type="primary" className='mt-3 ml-4' onClick={(event) => getFilterValue(event.target.value)} title="Search" >

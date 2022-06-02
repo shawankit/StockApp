@@ -84,7 +84,7 @@ const Items = ({ }) => {
                         dataSource={items}
                         columns={columns}
                         bordered
-                        pagination={ {current: 1,pageSize: 25}}
+                        pagination={ {pageSize: 10}}
                     />
                 </Col>
             </Row> 
