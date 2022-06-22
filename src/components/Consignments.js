@@ -5,14 +5,16 @@ import FieldData from '../data/FieldData';
 import ConsignmentModal from './modals/ConsignmentModal';
 import LocationModal from "./modals/LocationModal";
 import { createConsignment, deleteConsignment } from "../api";
+import BulkConsignmentModal from "./modals/BulkConsignmentModal";
 const { Title } = Typography;
-const Consigments = ({ consigments , fetchConsignments}) => {
+const Consigments = ({ consigments , fetchConsignments, filterApplied}) => {
 
     const [visibleCM, setVisibleCM] = useState(false);
     const [editData, setEditData] = useState(null);
     const [actionColumn,SetActionCol] = useState(true);
     const [visibleLM, setVisibleLM] = useState(false);
     const [editLData, setLEditData] = useState(null);
+    const [visibleBCM, setVisibleBCM] = useState(false);
 
     const onEdit = (data) => {
         setEditData({...data})
@@ -22,6 +24,11 @@ const Consigments = ({ consigments , fetchConsignments}) => {
     const onAdd = () => {
         setEditData(null)
         setVisibleCM(true);
+    }
+
+    const onAddBulk = () => {
+        setEditData(null)
+        setVisibleBCM(true);
     }
 
     const  onDelete = async (data) => {
@@ -50,7 +57,7 @@ const Consigments = ({ consigments , fetchConsignments}) => {
         setLEditData(null)
         setVisibleLM(true);
     }
-
+   
     const uniqueMap = consigments && consigments.length > 0 ? consigments.reduce((previous, current) => {
             for(let key in current){
                 if(!previous[key]){
@@ -64,13 +71,13 @@ const Consigments = ({ consigments , fetchConsignments}) => {
 
     const columns = FieldData.map((column) => ({
         title:  ( 
-            <Typography.Text ellipsis={column.label == 'Consignment Number'? false : true} title={column.label}>
+            <Typography.Text ellipsis={false} title={column.label}>
                 {column.label}
             </Typography.Text>
         ),
         dataIndex: column.name,
         key: column.name + (new Date().getTime() + Math.random() * 10000),
-        width: '150px',
+        width: '100px',
         filters: uniqueMap[column.name] ? Array.from(uniqueMap[column.name]).map((value) => ({ text: value, value: value})) : [],
         filterMode: 'tree',
         filterSearch: true,
@@ -82,7 +89,7 @@ const Consigments = ({ consigments , fetchConsignments}) => {
             title: 'Action',
             key: 'operation'  + (new Date().getTime() + Math.random() * 10000),
             fixed: 'right',
-            width: 250,
+            width: 200,
             render: (data) => {
                 return (
                     <>
@@ -94,9 +101,9 @@ const Consigments = ({ consigments , fetchConsignments}) => {
                             <DeleteOutlined />
                         </Button>
     
-                        <Button key={'location'+data.id} type="secondary" onClick={() => onChangeLocation(data)} className="ml-2" title="Delete">
+                        {/* <Button key={'location'+data.id} type="secondary" onClick={() => onChangeLocation(data)} className="ml-2" title="Delete">
                             <HeatMapOutlined />
-                        </Button>
+                        </Button> */}
 
                         <Button key={'copy'+data.id} type="dashed" onClick={() => onCopy(data)} className="ml-2" title="Copy">
                             <CopyOutlined />
@@ -114,9 +121,10 @@ const Consigments = ({ consigments , fetchConsignments}) => {
     return (
         <>
          <div className="home-heading-container">
-            <Title level={2} className="home-title">Consignments<div>{searchValue != '' ? ` (Search results - "${searchValue}")` : ''}</div></Title>
-           
+            <Title level={2} className="home-title">Consignments</Title>
+            <div>{filterApplied ? `(Filter Applied)` : (searchValue != '' ? ` (Search results - "${searchValue}")` : '')}</div>
             <Title level={3} className="show-more">
+                <Button className="mr-4" onClick={() => onAddBulk()}><PlusSquareOutlined />Add Bulk Consigments</Button>
                 <a className="text-sm mr-4" onClick={() => SetActionCol(!actionColumn)}>Action</a>
                 <Button onClick={() => onAdd()}><PlusSquareOutlined />Add Consigments</Button>
             </Title>
@@ -124,7 +132,7 @@ const Consigments = ({ consigments , fetchConsignments}) => {
         <Row className="w-full">
             <Col span={24}>
                 <Table
-                    dataSource={consigments.map((con,index) => ({ ...con,key: index + (new Date().getTime() + Math.random() * 10000)})) } 
+                    dataSource={consigments ? consigments.map((con,index) => ({ ...con,key: index + (new Date().getTime() + Math.random() * 10000)})) : null } 
                     columns={columns}
                     bordered
                     scroll={{ x: 1600 }}
@@ -133,6 +141,7 @@ const Consigments = ({ consigments , fetchConsignments}) => {
                 />
             </Col>
         </Row>
+        <BulkConsignmentModal visible={visibleBCM} setVisible={setVisibleBCM} fetchConsignments={fetchConsignments} />
         <ConsignmentModal visible={visibleCM} setVisible={setVisibleCM} data={editData} fetchConsignments={fetchConsignments} />
         <LocationModal visible={visibleLM} setVisible={setVisibleLM} data={editLData} consigmentData = {editData} fetchConsignments={fetchConsignments}/>
         </>

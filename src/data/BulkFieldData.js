@@ -1,4 +1,4 @@
-const FieldData = [
+const BulkFieldData = [
     {
         label : "Month",
         name: 'month',
@@ -39,37 +39,6 @@ const FieldData = [
         list: 'godowns'
     },
     {
-        label : "Privart Mark",
-        name: 'privartMark',
-        type: 'input',
-        inputType: 'text'
-    },
-    {
-        label : "Number Of Package",
-        name: 'numberOfPackage',
-        type: 'input',
-        inputType: 'number'
-    },
-    {
-        label : "Weight",
-        name: 'weight',
-        type: 'input',
-        inputType: 'number'
-    },
-    {
-        label : "Quantity",
-        name: 'quantity',
-        type: 'input',
-        inputType: 'number'
-    },
-    {
-        label : "Item",
-        name: 'item',
-        type: 'select',
-        inputType: 'text',
-        list: 'items'
-    },
-    {
         label : "Bill Number",
         name: 'billNo',
         type: 'input',
@@ -84,12 +53,6 @@ const FieldData = [
     {
         label : "Amount Declared",
         name: 'amountDeclared',
-        type: 'input',
-        inputType: 'number'
-    },
-    {
-        label : "Rate",
-        name: 'rate',
         type: 'input',
         inputType: 'number'
     },
@@ -123,12 +86,12 @@ const FieldData = [
         type: 'input',
         inputType: 'date'
     },
-    // {
-    //     label : "Challan Number",
-    //     name: 'challanNumber',
-    //     type: 'input',
-    //     inputType: 'number'
-    // }
+    {
+        label : "Number Of Package",
+        name: 'numberOfPackage',
+        type: 'input',
+        inputType: 'number'
+    },
 ]
 
-export default FieldData;
+export default BulkFieldData;

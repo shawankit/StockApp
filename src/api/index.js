@@ -10,6 +10,8 @@ export const getConsignment  = (id) => API.get(`/consigments/${id}`);
 export const updateConsignment = (id, updatedConsigment) => API.put(`/consigments/${id}`, updatedConsigment);
 export const deleteConsignment= (id) => API.delete(`/consigments/${id}`);
 
+export const createBulkConsignment = (consigment) => API.post("/consigments/bulk", consigment);
+
 export const changeConsignmentLocation = (id,data) => API.post(`/consigments/${id}/godowns`,data);
 
 export const getAllGodowns = () => API.get("/godowns");
@@ -32,6 +34,9 @@ export const getAllStats = () => API.get("/stats");
 
 export const getAllConsigmentWithFilter = (filter) => API.get(`/consigments?consignmentNo=${filter}`);
 
-export const createChallan = (godownId,consignments,number) => API.post("/challans", { godownId, consignments, number });
+export const createChallan = (fromGodownId,toGodownId,consignments) => API.post("/challans", { fromGodownId, consignments, toGodownId });
+
+export const getFilterMetaData = () => API.get("/filter-data");
+export const filterConsignments = (filter) => API.post("/consigments/filter", filter);
 
 

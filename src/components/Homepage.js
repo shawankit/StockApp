@@ -9,6 +9,7 @@ import Godowns from './Godowns.js';
 import Items from './Items.js';
 import Suppliers from './Suppliers.js';
 import InputField from './common/InputField.js';
+import Filter from './Filter.js';
 import { SearchOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
@@ -23,23 +24,31 @@ const Homepage = () => {
       supplierCount: 0,
       godownCount: 0
   });
+  const [filterApplied, setFilterApplied ] = useState(false);
   useEffect(() => {
     fetchConsignments();
   },[]);
 
   const fetchConsignments = async () => {
+    setFilterApplied(false);
     const sValue = document.getElementById('searchByConNo').value;
 
     const response = await getAllConsigment(sValue);
-    
+    console.log(response)
     setConsignments(response?.data?.entity);
 
     const statsResponse = await getAllStats();
     console.log(statsResponse)
     setStats(statsResponse?.data?.entity);
+    
   }
 
-  const getFilterValue = async (value) => {
+  const filterCallback = (response) => {
+    setConsignments(response?.data?.entity);
+    setFilterApplied(true);
+  }
+
+  const serachConsignment = async (value) => {
     await fetchConsignments();
   }
 
@@ -52,7 +61,7 @@ const Homepage = () => {
 
   return (
     <>
-      <Title level={2} className="heading">Stock Management Stats</Title>
+      <Title level={2} className="heading" id='mainheader'>Stock Management Stats</Title>
       <Row gutter={[32, 32]}>
             <Col span={12}><Statistic title="Total Consigments" value={globalStats?.consignmentCount ? globalStats.consignmentCount : 0 }/></Col>
             <Col span={12}><Statistic title="Total Packages" value={millify(globalStats?.packageCount ? globalStats.packageCount : 0)}/></Col>
@@ -61,7 +70,7 @@ const Homepage = () => {
             <Col span={12}><Statistic title="Total Suppliers" value={millify(globalStats?.supplierCount ? globalStats.supplierCount : 0)}/></Col>
       </Row>
       
-      <Row>
+      <Row id='searchContainer'>
         <InputField
               label={'Search'}
               placeholder={'consignment no, transporter, supplier, item, bill no, mr no,godown'}
@@ -72,13 +81,15 @@ const Homepage = () => {
               icol={10}
           />
           <Col span={4}>
-                <Button type="primary" className='mt-3 ml-4' onClick={(event) => getFilterValue(event.target.value)} title="Search" >
+                <Button type="primary" className='mt-3 ml-4' onClick={(event) => serachConsignment(event.target.value)} title="Search" >
                     <SearchOutlined /> Search
                 </Button>
           </Col>
       </Row>
+      <Filter filterCallback={filterCallback} fetchConsignments={fetchConsignments}/>
+
       <div id='consignments'>
-        <Consigments consigments={ consigments } fetchConsignments={fetchConsignments}/>
+        <Consigments consigments={ consigments } fetchConsignments={fetchConsignments} filterApplied={filterApplied}/>
       </div>
       
       <div id='godowns'>

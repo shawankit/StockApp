@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Button, Row } from 'antd';
-import FieldData from '../../data/FieldData';
+import { Modal, Button, Row, Typography, Col } from 'antd';
+import BulkFieldData from '../../data/BulkFieldData';
 import InputField from '../common/InputField';
-import { createConsignment, getAllGodowns, getAllItems, getAllSuppliers, getAllTransporters, updateConsignment } from '../../api'; 
+import { createBulkConsignment, createConsignment, getAllGodowns, getAllItems, getAllSuppliers, getAllTransporters, updateConsignment } from '../../api'; 
 import SelectField from '../common/SelectField';
+import PackageComponent from '../common/PackageComponent';
+import PackageData from '../../data/PackageData';
+const { Title } = Typography;
 
-const ConsignmentModal = ({ visible , setVisible , data, fetchConsignments}) => {
+const BulkConsignmentModal = ({ visible , setVisible ,data, fetchConsignments}) => {
 
-    const initialData = FieldData.reduce((previous, field) => ({...previous,[field.name]: ''}),{});
+    const initialData = BulkFieldData.reduce((previous, field) => ({...previous,[field.name]: ''}),{});
     const [formData, setFormData] = useState(initialData);
+    const [packageList, setPackageList] = useState([]);
     const [items, setItems] = useState([]);
     const [fitems, setFItems] = useState([]);
 
@@ -26,39 +30,45 @@ const ConsignmentModal = ({ visible , setVisible , data, fetchConsignments}) => 
     }
 
     useEffect(() => {
-        setFormData(data);
+        setFormData(initialData);
+        setPackageList([]);
         fetchItems();
-    },[data])
+    },[])
+
+    const onClose = () => {
+        setVisible(false);
+        setFormData(initialData);
+        setPackageList([]);
+    }
 
     const onSubmit = async (close) => {
         console.log(formData);
+        console.log(packageList)
+
+        if(packageList.length == 0){
+            swal("Atleast 1 pacakge is needed", "validation");
+            return;
+        }
     
-        if(data) {
-            let response = await updateConsignment(data.id,formData);
-            console.log(response);
-            if(response?.data?.status == true){
-                swal("Success", "Succesfully updated consignments details");
-            }
-            else{
-                swal("OOPS Something Went wrong", "error");
-            }
+        formData.packageList = packageList;
+        let response = await createBulkConsignment(formData);
+        console.log(response);
+        if(response?.data?.status == true){
+            swal("Success" , "Succesfully added all consignments details");
         }
         else{
-            let response = await createConsignment(formData);
-            console.log(response);
-            if(response?.data?.status == true){
-                swal("Success" , "Succesfully added consignments details");
-            }
-            else{
-                swal("OOPS Something Went wrong", "error");
-            }
+            swal("OOPS Something Went wrong", "error");
         }
         
 
-        if(close) setVisible(false);
+        if(close) { 
+            onClose();
+        }
 
         await fetchConsignments();
     }
+
+   
 
     const fetchItems = async () => {
         const response = await getAllItems();
@@ -99,16 +109,46 @@ const ConsignmentModal = ({ visible , setVisible , data, fetchConsignments}) => 
         }
     }
 
+    const setPackageData = (index, data) => {
+        packageList[index] = data;
+        setPackageList(packageList);
+    }
+
+    const renderPackages = () => {
+
+        const renderList = [];
+
+
+        if(formData?.numberOfPackage && formData?.numberOfPackage !== ''){
+            const count = parseInt(formData.numberOfPackage)
+
+            if(count > 100 )  { 
+                swal('Maximum 100 Packages allowed to insert in bulk', 'validation');
+                setFormData({...formData, numberOfPackage: count})
+            }
+            for(let i = 0 ; i < count && i < 100; i++){
+                renderList.push(
+                    <PackageComponent items={items} key={i} index={i} setPackageData={setPackageData} handleSearch={handleSearch}/>
+                )
+            }
+            
+        } 
+       
+        
+
+        return renderList;
+    }
+
     return (
         <>
         <Modal
-            title={`${data ? 'Edit' : 'Add'} Consignment`}
+            title={`${data ? 'Edit' : 'Add'} Bulk Consignment`}
             visible={visible}
             width={"85%"}
             style={{ top: 20 }}
-            onCancel={() => setVisible(false)}
+            onCancel={() => onClose()}
             footer={[
-            <Button key="cancel" onClick={() => setVisible(false)}>
+            <Button key="cancel" onClick={() => onClose()}>
                 Cancel
             </Button>,
             <Button key="save" type="primary" onClick={() => onSubmit()}>
@@ -122,7 +162,7 @@ const ConsignmentModal = ({ visible , setVisible , data, fetchConsignments}) => 
             <div>
                 <Row>
                     { 
-                        FieldData.map((field) => field.type == 'input' ?
+                        BulkFieldData.map((field) => field.type == 'input' ?
                                 <InputField 
                                     label={field.label}
                                     type={field.inputType} 
@@ -152,10 +192,27 @@ const ConsignmentModal = ({ visible , setVisible , data, fetchConsignments}) => 
                     }     
                 </Row>
             </div>
+
+            <div id='packageDiv' className='ml-24'>
+                <Title level={3} className="home-title">Packages</Title>
+                <div>
+                <Row>
+                    {
+                        PackageData.map((field,index) =>
+                        <Col span={field.name === 'item'? 8 : 3} key={index} className='border-4'>
+                            <h3 className='px-2 pt-2 text-lg font-bold'>{field.label}</h3>
+                        </Col>)
+                    }
+                
+                </Row>
+                { renderPackages() }
+                </div>
+               
+            </div>
                    
         </Modal>
         </>
     );
 };
 
-export default ConsignmentModal;
+export default BulkConsignmentModal;
