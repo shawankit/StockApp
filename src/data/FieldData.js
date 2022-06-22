@@ -39,7 +39,7 @@ const FieldData = [
         list: 'godowns'
     },
     {
-        label : "Privart Mark",
+        label : "Private Mark",
         name: 'privartMark',
         type: 'input',
         inputType: 'text'
